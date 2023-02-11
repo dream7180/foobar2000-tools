@@ -1,0 +1,140 @@
+import win.ui;
+/*DSG{{*/
+mainForm = win.form(text="foo-green";right=249;bottom=249;border="dialog frame";max=false)
+mainForm.add(
+button1={cls="button";text="Register components";left=27;top=22;right=222;bottom=69;font=LOGFONT(h=-14;name='Segoe UI');z=1};
+button2={cls="button";text="Unregister components";left=27;top=87;right=222;bottom=137;font=LOGFONT(h=-14;name='Segoe UI');z=2};
+button3={cls="button";text="Create/delete shortcut";left=27;top=155;right=222;bottom=205;font=LOGFONT(h=-14;name='Segoe UI');z=3}
+)
+/*}}*/
+
+if(_ARGV.opt){
+	mainForm.edit.print(_ARGV.opt,_ARGV[#_ARGV]);
+}
+
+mainForm.button1.oncommand = function(id,event){
+	var result = "";
+	import process.popen;
+	if(global._WIN_64){
+		if(io.exist("\ShellExt32.dll")){
+			var prcs = process.popen.cmd(`
+			regsvr32.exe /s "ShellExt32.dll"
+			`)
+			if(prcs) result += "ShellExt32.dll";
+		}
+		if(io.exist("\ShellExt64.dll")){
+			var prcs = process.popen.cmd(`
+			regsvr32.exe /s "ShellExt64.dll"
+			`)
+			if(prcs) result += '\r\n'++"ShellExt64.dll";
+		}
+		if(io.exist("\profile\user-components\foo_input_sacd\dsd_transcoder.dll")){
+			var prcs = process.popen.cmd(`
+			regsvr32.exe /s "profile\user-components\foo_input_sacd\dsd_transcoder.dll"
+			`)
+			if(prcs) result += '\r\n'++"dsd_transcoder.dll";
+		}
+		if(io.exist("\profile\user-components\foo_input_sacd\dsd_transcoder_x64.dll")){
+			var prcs = process.popen.cmd(`
+			regsvr32.exe /s "profile\user-components\foo_input_sacd\dsd_transcoder_x64.dll"
+			`)
+			if(prcs) result += '\r\n'++"dsd_transcoder_x64.dll";
+		}	
+	} else {
+		if(io.exist("\ShellExt32.dll")){
+			var prcs = process.popen.cmd(`
+			regsvr32.exe /s "ShellExt32.dll"
+			`)
+			if(prcs) result += "ShellExt32.dll";
+		}
+		if(io.exist("\profile\user-components\foo_input_sacd\dsd_transcoder.dll")){
+			var prcs = process.popen.cmd(`
+			regsvr32.exe /s "profile\user-components\foo_input_sacd\dsd_transcoder.dll"
+			`)
+			if(prcs) result += '\r\n'++"dsd_transcoder.dll";
+		}
+	}
+	import win;
+	if(result != "") win.msgbox(result, "Components Registered");
+	else win.msgbox("No component found", "Error");
+}
+
+mainForm.button2.oncommand = function(id,event){
+	var result = "";
+	import process.popen;
+	if(global._WIN_64){
+		if(io.exist("\ShellExt32.dll")){
+			var prcs = process.popen.cmd(`
+			regsvr32.exe /s /u "ShellExt32.dll"
+			`)
+			if(prcs) result += "ShellExt32.dll";
+		}
+		if(io.exist("\ShellExt64.dll")){
+			var prcs = process.popen.cmd(`
+			regsvr32.exe /s /u "ShellExt64.dll"
+			`)
+			if(prcs) result += '\r\n'++"ShellExt64.dll";
+		}
+		if(io.exist("\profile\user-components\foo_input_sacd\dsd_transcoder.dll")){
+			var prcs = process.popen.cmd(`
+			regsvr32.exe /s /u "profile\user-components\foo_input_sacd\dsd_transcoder.dll"
+			`)
+			if(prcs) result += '\r\n'++"dsd_transcoder.dll";
+		}
+		if(io.exist("\profile\user-components\foo_input_sacd\dsd_transcoder_x64.dll")){
+			var prcs = process.popen.cmd(`
+			regsvr32.exe /s /u "profile\user-components\foo_input_sacd\dsd_transcoder_x64.dll"
+			`)
+			if(prcs) result += '\r\n'++"dsd_transcoder_x64.dll";
+		}
+			
+	} else {
+		if(io.exist("\ShellExt32.dll")){
+			var prcs = process.popen.cmd(`
+			regsvr32.exe /s /u "ShellExt32.dll"
+			`)
+			if(prcs) result += "ShellExt32.dll";
+		}
+		if(io.exist("\profile\user-components\foo_input_sacd\dsd_transcoder.dll")){
+			var prcs = process.popen.cmd(`
+			regsvr32.exe /s /u "profile\user-components\foo_input_sacd\dsd_transcoder.dll"
+			`)
+			if(prcs) result += '\r\n'++"dsd_transcoder.dll";
+		}
+	}
+	import win;
+	if(result != "") win.msgbox(result, "Components Unregistered");
+	else win.msgbox("No component found", "Error");
+}
+
+mainForm.button3.oncommand = function(id,event){
+	import fsys.lnk;
+	fbkpath = io._exedir + "foobar2000.exe";
+	lnk = fsys.lnk();
+	lnk.name = "foobar2000"  
+	lnk.path = fbkpath //设置目标路径
+	lnk.setIcon(fbkpath,0); //设置图标
+	fbklnk = fsys.lnk.searchInDesktop("foobar2000","foobar2000", 0 /*_CSIDL_DESKTOP*/);
+	if(!fbklnk){
+		lnk.save(
+    		fsys.joinpath(
+        		fsys.getSpecial(0x0010 /*_CSIDL_DESKTOPDIRECTORY*/ )
+        		,"foobar2000.lnk"
+        	)
+		)
+		import win;
+		win.msgbox("foobar2000 desktop shortcut created");
+	} else {
+		fsys.delete(
+			fsys.joinpath(
+        		fsys.getSpecial(0x0010 /*_CSIDL_DESKTOPDIRECTORY*/ )
+        		,"foobar2000*.lnk"
+        	)
+        )
+        import win;
+		win.msgbox("foobar2000 desktop shortcut deleted");
+	}
+}
+
+mainForm.show();
+return win.loopMessage();

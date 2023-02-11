@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project ver="10" name="foobar2000 绿色化" libEmbed="true" icon="res\install.ico" ui="win" output="foobar2000 绿色化.exe" CompanyName="dreamland" FileDescription="foobar2000 绿色化" LegalCopyright="Copyright (C) dreamawake 2022" ProductName="foobar2000 绿色化" InternalName="foobar2000 绿色化" FileVersion="1.1.0.01" ProductVersion="1.1.0.01" publishDir="/dist/" dstrip="true" local="false" ignored="false">
+	<file name="main.aardio" path="main.aardio" comment="main.aardio"/>
+	<folder name="资源文件" path="res" embed="true" local="false" ignored="false"/>
+</project>
